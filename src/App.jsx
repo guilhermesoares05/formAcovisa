@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState } from 'react';
 import InputMask from 'react-input-mask';
-
 import './App.css';
 
 const App = () => {
 
+  //state com informações do usuario
   const [user, setUser] = useState({
     name: '',
     birthDate: '',
@@ -19,27 +18,26 @@ const App = () => {
     city: '',
   });
 
+  //setando state do usuario
   const handleSetUser = (userData) => (evento) => {
     if (userData === 'birthDate') {
       let data = new Date(evento.target.value);
       setUser({ ...user, [userData]: data.getTime() });
-
     } else {
       setUser({ ...user, [userData]: evento.target.value });
     }
   }
 
+  //setando idade do usuario apartir da data de nascimento
   const handleSetAgeUser = () => {
     let toDay = new Date();
     let userBirthDate = new Date(user.birthDate);
     let userAge = toDay.getFullYear() - userBirthDate.getFullYear();
-    console.log(toDay.getMonth() > userBirthDate.getMonth() ? `Voce tem ${parseInt(userAge)} anos` : `voce tem ${(parseInt(userAge) - 1)} anos`)
-    let aaa = toDay.getMonth() > userBirthDate.getMonth() ? `${parseInt(userAge)}` : `${(parseInt(userAge) - 1)}`;
-    console.log(aaa)
+    let endUserAge = toDay.getMonth() > userBirthDate.getMonth() ? `${parseInt(userAge)}` : `${(parseInt(userAge) - 1)}`;
     if (userAge >= 1) {
       setUser({
         ...user,
-        age: aaa == 1 ? `${aaa} ano` : `${aaa} anos`
+        age: endUserAge == 1 ? `${endUserAge} ano` : `${endUserAge} anos`
       });
     } else {
       setUser({
@@ -49,25 +47,24 @@ const App = () => {
     }
   }
 
+  //pegando dados de enderço do usuario apartir do cep
   const handleSetUserAddress = async () => {
     try {
       let getInfo = await fetch(`https://viacep.com.br/ws/${user.zipCode}/json/`);
       let res = await getInfo.json();
-      console.log(res);
-
       setUser({
         ...user,
         street: res.logradouro,
         neighborhood: res.bairro,
         city: `${res.localidade}-${res.uf}`,
       });
-
     } catch (error) {
       console.log(error);
       alert(`Erro, confira o cep! ${error}`)
     }
   }
 
+  //
   const handleConfirmData = () => {
     console.log(user)
   }
@@ -101,19 +98,18 @@ const App = () => {
       {/**Linha com dois dados para exibição desktop e um por linha em mobile */}
       <div className='container' >
         <div className='row'>
-          {/*Componente de input NOME*/}
+          {/*Componente de input IDADE*/}
           <div className='col s12 m6' >
             <div class="input-field col s12">
               <i class="material-icons prefix">tag</i>
               <input id="userAge" class="validate" value={user.age} onChange={handleSetUser('age')} readOnly placeholder="Idade" />
             </div>
           </div>
-          {/*Componente de input DATA DE NASCIMENTO*/}
+          {/*Componente de input CELULAR*/}
           <div className='col s12 m6' >
             <div class="input-field col s12">
               <i class="material-icons prefix">phone_iphone</i>
               <InputMask id="userPhoneNumber" type="text" class="validate" value={user.phoneNumber} onChange={handleSetUser('phoneNumber')} mask="(99)99999-9999" />
-
               <label for="userPhoneNumber">Celular</label>
             </div>
           </div>
@@ -122,7 +118,7 @@ const App = () => {
       {/**Linha com dois dados para exibição desktop e um por linha em mobile */}
       <div className='container' >
         <div className='row'>
-          {/*Componente de input NOME*/}
+          {/*Componente de input CPF*/}
           <div className='col s12 m6' >
             <div class="input-field col s12">
               <i class="material-icons prefix">pin</i>
@@ -130,7 +126,7 @@ const App = () => {
               <label for="userCpf">CPF</label>
             </div>
           </div>
-          {/*Componente de input DATA DE NASCIMENTO*/}
+          {/*Componente de input EMAIL*/}
           <div className='col s12 m6' >
             <div class="input-field col s12">
               <i class="material-icons prefix">email</i>
@@ -144,7 +140,7 @@ const App = () => {
       {/**Linha com dois dados para exibição desktop e um por linha em mobile */}
       <div className='container' >
         <div className='row'>
-          {/*Componente de input NOME*/}
+          {/*Componente de input CEP*/}
           <div className='col s12 m6' >
             <div class="input-field col s12">
               <i class="material-icons prefix">pin</i>
@@ -152,7 +148,7 @@ const App = () => {
               <label for="userCep">CEP</label>
             </div>
           </div>
-          {/*Componente de input DATA DE NASCIMENTO*/}
+          {/*Componente de input NUMERO DA CASA*/}
           <div className='col s12 m6' >
             <div class="input-field col s12">
               <i class="material-icons prefix">home</i>
@@ -164,7 +160,7 @@ const App = () => {
       {/**Linha com dois dados para exibição desktop e um por linha em mobile */}
       <div className='container' >
         <div className='row'>
-          {/*Componente de input NOME*/}
+          {/*Componente de input RUA*/}
           <div className='col s12 m12' >
             <div class="input-field col s12">
               <i class="material-icons prefix">traffic</i>
@@ -176,14 +172,14 @@ const App = () => {
       {/**Linha com dois dados para exibição desktop e um por linha em mobile */}
       <div className='container' >
         <div className='row'>
-          {/*Componente de input NOME*/}
+          {/*Componente de input BAIRRO*/}
           <div className='col s12 m6' >
             <div class="input-field col s12">
               <i class="material-icons prefix">reduce_capacity</i>
               <input id="userNeighborhood" class="validate" value={user.neighborhood} onChange={handleSetUser('neighborhood')} placeholder="Bairro" readOnly />
             </div>
           </div>
-          {/*Componente de input DATA DE NASCIMENTO*/}
+          {/*Componente de input CIDADE*/}
           <div className='col s12 m6' >
             <div class="input-field col s12">
               <i class="material-icons prefix">location_city</i>
@@ -192,7 +188,7 @@ const App = () => {
           </div>
         </div>
       </div>
-      {/**Botão para confirmar dados */}
+      {/**Botão para confirmar dados*/}
       <div className='container'>
         <div className='row'>
           <div className='col s12 m12 center-align' >
